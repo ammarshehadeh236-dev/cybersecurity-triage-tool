@@ -3,6 +3,11 @@
 import json
 from pathlib import Path
 
+try:
+    from models import TriageCase
+except ImportError:
+    from .models import TriageCase
+
 DATA_FILE = Path(__file__).resolve().parent.parent / "data" / "triage_cases.json"
 
 
@@ -15,7 +20,7 @@ def load_cases():
         with DATA_FILE.open("r", encoding="utf-8") as file:
             data = json.load(file)
 
-        return [__import__("src.models", fromlist=["TriageCase"]).TriageCase.from_dict(item)
+        return [TriageCase.from_dict(item)
                 for item in data]
     except (json.JSONDecodeError, OSError, TypeError, KeyError) as error:
         print(f"Warning: Could not load saved cases: {error}")
